@@ -8,7 +8,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 public class DesktopLauncher{
 	private static final String TAG = "NXTAR_ANDROID_MAIN";
 	private static final String CLASS_NAME = DesktopLauncher.class.getSimpleName();
-	
+
 	public static void main (String[] arg) {
 		if(!CVProcessor.isOcvOn()){
 			throw new RuntimeException(TAG + " : " + CLASS_NAME + ": OpenCV failed to load.");

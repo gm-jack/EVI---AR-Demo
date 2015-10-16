@@ -28,9 +28,28 @@ public class CVProcessor implements ImageProcessor {
 
 	private boolean cameraCalibrated;
 
-	private native void getMarkerCodesAndLocations(long inMat, long outMat, int[] codes, long camMat, long distMat, float[] translations, float[] rotations);
-	private native boolean findCalibrationPattern(long inMat, long outMat, float[] points);
-	private native double calibrateCameraParameters(long camMat, long distMat, long frame, float[] calibrationPoints);
+	private native void getMarkerCodesAndLocations(
+			long inMat,
+			long outMat,
+			int[] codes,
+			long camMat,
+			long distMat,
+			float[] translations,
+			float[] rotations
+			);
+
+	private native boolean findCalibrationPattern(
+			long inMat,
+			long outMat,
+			float[] points
+			);
+
+	private native double calibrateCameraParameters(
+			long camMat,
+			long distMat,
+			long frame,
+			float[] calibrationPoints
+			);
 
 	static{
 		try{
