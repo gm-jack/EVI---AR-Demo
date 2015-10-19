@@ -13,15 +13,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 
+/**
+ * This is the core class of the demo. It handles all resource loading and rendering.
+ * 
+ * @author Miguel Angel Astor Romero
+ */
 public class EviDemo extends ApplicationAdapter {
 	private static final String TAG        = "EVI DEMO - CORE";
 	private static final String CLASS_NAME = EviDemo.class.getSimpleName();
-
-	private static final int   W    = 640;
-	private static final int   H    = 360;
-	private static final float NEAR = 0.01f;
-	private static final float FAR  = 10.0f;
-	private static final int   CODE = 213;
 
 	private ImageProcessor          cvProc;
 	private Texture                 tex;
@@ -61,9 +60,9 @@ public class EviDemo extends ApplicationAdapter {
 		manager = new AssetManager();
 		manager.load("monkey.g3db", Model.class);
 
-		camera      = new CustomPerspectiveCamera(67, W, H);
-		camera.near = NEAR;
-		camera.far  = FAR;
+		camera      = new CustomPerspectiveCamera(67, ProjectConstants.W, ProjectConstants.H);
+		camera.near = ProjectConstants.NEAR;
+		camera.far  = ProjectConstants.FAR;
 		camera.translate(0.0f, 0.0f, 0.0f);
 		camera.lookAt(0.0f, 0.0f, -1.0f);
 		camera.update();
@@ -81,10 +80,13 @@ public class EviDemo extends ApplicationAdapter {
 	public void render () {
 		float focalPointX, focalPointY, cameraCenterX, cameraCenterY;
 
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		if(doneLoading) {
+			/*
+			 * When all resources are loaded we can start the rendering.
+			 */
 
 			if(cvProc.isCameraCalibrated()) {
 				data = cvProc.findMarkersInFrame();
@@ -92,7 +94,7 @@ public class EviDemo extends ApplicationAdapter {
 				if(data != null) {
 
 					for(int i = 0; i < ProjectConstants.MAXIMUM_NUMBER_OF_MARKERS; i++) {
-						if(data.markerCodes[i] == CODE) {
+						if(data.markerCodes[i] == ProjectConstants.CODE) {
 							monkey.position.set(data.translationVectors[i]);
 							monkey.rotation.set(data.rotationMatrices[i]);
 							monkey.applyWorldTransform();
@@ -104,7 +106,16 @@ public class EviDemo extends ApplicationAdapter {
 					focalPointY   = cvProc.getFocalPointY();
 					cameraCenterX = cvProc.getCameraCenterX();
 					cameraCenterY = cvProc.getCameraCenterY();
-					camera.setCustomARProjectionMatrix(focalPointX, focalPointY, cameraCenterX, cameraCenterY, NEAR, FAR, W, H);
+					camera.setCustomARProjectionMatrix(
+							focalPointX,
+							focalPointY,
+							cameraCenterX,
+							cameraCenterY,
+							ProjectConstants.NEAR,
+							ProjectConstants.FAR,
+							ProjectConstants.W,
+							ProjectConstants.H
+							);
 					camera.update(camera.projection);
 
 					frame = new Pixmap(data.outFrame, 0, data.outFrame.length);
@@ -135,7 +146,6 @@ public class EviDemo extends ApplicationAdapter {
 
 						// Save the calibration points to the samples array.
 						for(int i = 0; i < calib.calibrationPoints.length; i += 2){
-							Gdx.app.log(TAG, CLASS_NAME + ".render(): Value " + Integer.toString(i) + " = (" + Float.toString(calib.calibrationPoints[i]) + ", " + Float.toString(calib.calibrationPoints[i + 1]) + ")");
 							calibrationSamples[lastSampleTaken][i] = calib.calibrationPoints[i];
 							calibrationSamples[lastSampleTaken][i + 1] = calib.calibrationPoints[i + 1];
 						}
@@ -164,6 +174,9 @@ public class EviDemo extends ApplicationAdapter {
 			}
 
 		} else {
+			/*
+			 * Keep loading the models until the AssetsManager finishes.
+			 */
 			doneLoading = manager.update();
 			if(doneLoading)
 				monkey.setModel(manager.get("monkey.g3db", Model.class));

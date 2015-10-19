@@ -1,0 +1,17 @@
+{
+    "platform": "linux64",
+    "jdk": "/home/miky/Descargas/openjdk-1.7.0-u80-unofficial-linux-amd64-image.zip",
+    "executable": "Evidemo_amd64",
+    "appjar": "desktop/build/libs/desktop-1.0.jar",
+    "mainclass": "ve/ucv/ciens/icaro/ardemo/desktop/DesktopLauncher",
+    "vmargs": [
+	"-Xmx1G",
+	"-Djava.library.path=."
+    ],
+    "resources": [
+        "desktop/libevi_10.so",
+        "desktop/libopencv_java248.so"
+    ],
+    "minimizejre": "hard",
+    "outdir": "dist"
+}

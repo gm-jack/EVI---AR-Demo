@@ -14,19 +14,53 @@ import com.badlogic.gdx.math.Vector3;
 import ve.ucv.ciens.icaro.ardemo.ImageProcessor;
 import ve.ucv.ciens.icaro.ardemo.ProjectConstants;
 
+/**
+ * This class implements the glue methods needed to use the OpenCV native methods. All
+ * image processing is done through this class.
+ * 
+ * @author Miguel Angel Astor Romero.
+ */
 public class CVProcessor implements ImageProcessor {
 	private static final String TAG = "NXTAR_ANDROID_MAIN";
 	private static final String CLASS_NAME = CVProcessor.class.getSimpleName();
 
+	/**
+	 * Indicates if the external native libraries were loaded successfully.
+	 */
 	private static boolean ocvOn = false;
 
+	/*
+	 * These two matrices represent the camera parameters calculated during camera calibration.
+	 * Both parameters are needed to render the virtual objects correctly.
+	 */
 	private Mat cameraMatrix;
 	private Mat distortionCoeffs;
 
+	/*
+	 * These objects are used to capture data from the video files.
+	 */
 	private VideoCapture markerCap;
 	private VideoCapture calibCap;
 
+	/**
+	 * Indicates if the camera calibration procedure completed sucessfully.
+	 */
 	private boolean cameraCalibrated;
+
+	/*
+	 * This block is executed when this class is loaded by the Java VM. It attempts to load
+	 * the external native libraries. 
+	 */
+	static{
+		try{
+			System.loadLibrary("opencv_java248");
+			System.loadLibrary("evi_10");
+			ocvOn = true;
+		}catch(UnsatisfiedLinkError e){
+			e.printStackTrace();
+			ocvOn = false;
+		}
+	}
 
 	private native void getMarkerCodesAndLocations(
 			long inMat,
@@ -51,17 +85,6 @@ public class CVProcessor implements ImageProcessor {
 			float[] calibrationPoints
 			);
 
-	static{
-		try{
-			System.loadLibrary("opencv_java248");
-			System.loadLibrary("evi_10");
-			ocvOn = true;
-		}catch(UnsatisfiedLinkError e){
-			e.printStackTrace();
-			ocvOn = false;
-		}
-	}
-
 	public static boolean isOcvOn() {
 		return ocvOn;
 	}
@@ -71,8 +94,8 @@ public class CVProcessor implements ImageProcessor {
 		cameraMatrix = new Mat();
 		distortionCoeffs = new Mat();
 
-		markerCap = new VideoCapture(arg[0]);
-		calibCap = new VideoCapture(arg[1]);
+		markerCap = new VideoCapture(arg[1]);
+		calibCap = new VideoCapture(arg[2]);
 	}
 
 	@Override

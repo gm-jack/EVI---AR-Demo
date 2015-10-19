@@ -21,4 +21,10 @@ public abstract class ProjectConstants{
 	public static final int     MAXIMUM_NUMBER_OF_MARKERS  = 5;
 	public static final int     CALIBRATION_PATTERN_POINTS = 54;
 	public static final int     CALIBRATION_SAMPLES        = 10;
+
+	public static final int   W    = 640;
+	public static final int   H    = 360;
+	public static final float NEAR = 0.01f;
+	public static final float FAR  = 10.0f;
+	public static final int   CODE = 213;
 }

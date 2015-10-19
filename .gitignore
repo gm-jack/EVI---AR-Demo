@@ -69,3 +69,6 @@ build/
 
 ## Emacs backup files
 *~
+
+## Packr dist folder
+dist/
